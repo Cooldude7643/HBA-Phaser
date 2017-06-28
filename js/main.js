@@ -1,5 +1,5 @@
 function init(){
-	
+	game.renderer.renderSession.roundPixels = true;
 }
 
 function preload(){
@@ -19,35 +19,55 @@ function create(){
     game.add.image(0, 0, 'background');
   loadLevel(this.game.cache.getJSON('level:1'));
   leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-  rightKey = game.imput.keyboard.addKey(Phaser.Keyboard.RIGHT);
-};
+  rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+}
 
 function update(){
 	handleInput();
+   
 }
-
+ function handleInput(){
+    if (leftKey.isDown) { // move hero left
+        move(-1);
+    }
+    else if (rightKey.isDown) { // move hero right
+        move(1);
+    }
+    else { //stop
+    }
+}
 function spawnPlatform(platform) {
     game.add.sprite(platform.x, platform.y, platform.image);
+    var sprite = platforms.create(platform.x, platform.y, platform.image);
+    console.log(sprite);
+    game.physics.enable(sprite);
+    sprite.body.allowGravity = false;
+    sprite.body.immovable = true;
 };
 
 function loadLevel(data) {
 	console.log(data);
     data.platforms.forEach(spawnPlatform, this);
     spawnCharacters({hero: data.hero});
+    game.physics.arcade.gravity.y = 1200;
 };
 
 function spawnCharacters (data) {
     hero = game.add.sprite(data.hero.x, data.hero.y, 'hero');
     hero.anchor.set(0.5, 0.5);
-    hero = game.add.sprite(data.hero.x, data.hero.y, 'hero');
-    hero.anchor.set(0.5, 0.5);
-    hero = game.add.sprite(data.hero.x, data.hero.y, 'hero');
-    hero.anchor.set(0.5, 0.5);
+    //Make the main character use the physics engine for movement
     game.physics.enable(hero);
+    hero.body
 };
 
 function move(direction){
     hero.body.velocity.x = direction * 200;
+    if (hero.body.velocity.x < 0) {
+        hero.scale.x = -1;
+    }
+    else if (hero.body.velocity.x > 0) {
+        hero.scale.x = 1;
+    }
 };
 
 function handInput(){
@@ -55,9 +75,12 @@ function handInput(){
         move(-1);
     }
     else if (rightKey.isDown) {
-    move(1) // move hero right
-        // ? - pass a parameter to the move function to move hero right
+    move(1);
+        }
+    else  {
+        move(0);
     }
-}
+};
+
 //Create a game state
 var game = new Phaser.Game(960, 600, Phaser.AUTO, 'game', {init: init, preload: preload, create: create, update: update});

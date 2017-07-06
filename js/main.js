@@ -6,7 +6,7 @@ function init(){
 }
 
 function preload(){
-    game.load.image('background', 'images/background.png');
+    game.load.image('background', 'images/476851439_1280x720.jpg');
     game.load.json('level:1', 'data/level01.json');
      game.load.json('level:0', 'data/level00.json');
     //spawn platform sprites
@@ -30,7 +30,8 @@ function preload(){
     game.load.spritesheet('door', 'images/door.png', 42, 66);
     game.load.image('key', 'images/key.png');
     game.load.audio('sfx:key', 'audio/key.wav');
-    game.load.audio('sfx:door', 'audio/door.wav')
+    game.load.audio('sfx:door', 'audio/door.wav');
+    game.load.spritesheet('icon:key', 'images/key_icon.png', 34, 30);
 };
 
 function create(){
@@ -41,6 +42,7 @@ function create(){
     coinIcon = game.make.image(40, 0, 'icon:coin');
  sfxKey = game.add.audio('sfx:key');
     sfxDoor = game.add.audio('sfx:door');
+    keyIcon = game.add.image(0, 19, 'icon:key');
 
     loadLevel(this.game.cache.getJSON('level:' +level));
     leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
@@ -48,8 +50,12 @@ function create(){
     upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
     upKey.onDown.add(function(){
         jump();
-   
-    });
+        
+    keyIcon.anchor.set(0, 0.5);
+    // ...
+    hud.add(keyIcon);
+     coinIcon = game.make.image(40, 0, 'icon:coin');
+   });
 
     //Adding coin icon
     hud = game.add.group();
@@ -67,10 +73,11 @@ function update(){
     handleInput();
     handleCollisions();
     moveSpider();
+    keyIcon.frame = hasKey ? 1 : 0;
 }
 
 function loadLevel(data) {
-    console.log(data);
+    
     platforms = game.add.group();
     coins = game.add.group();
     spiders = game.add.group();
@@ -148,10 +155,10 @@ function handleCollisions(){
    game.physics.arcade.overlap(hero, coins, onHeroVsCoin, null);
    game.physics.arcade.overlap(hero, spiders, onHeroVsEnemy, null);
     game.physics.arcade.overlap(hero, key, onHeroVsKey, null);
-      game.physics.arcade.overlap(hero, door, onHeroVsDoor);
-        function lol(hero, door) {
+    game.physics.arcade.overlap(hero, door, onHeroVsDoor,
+        function lol (hero, door) {
             return hasKey && hero.body.touching.down;
-        };
+        });
 };
  
 

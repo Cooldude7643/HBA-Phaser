@@ -9,6 +9,7 @@ function preload(){
     game.load.image('background', 'images/476851439_1280x720.jpg');
     game.load.json('level:1', 'data/level01.json');
      game.load.json('level:0', 'data/level00.json');
+     game.load.json('level:2', 'data/level02.json');
     //spawn platform sprites
     game.load.image('ground', 'images/ground.png');
     game.load.image('grass:8x1', 'images/grass_8x1.png');
@@ -16,9 +17,8 @@ function preload(){
     game.load.image('grass:4x1', 'images/grass_4x1.png');
     game.load.image('grass:2x1', 'images/grass_2x1.png');
     game.load.image('grass:1x1', 'images/grass_1x1.png');
-
     // load the hero image
-    game.load.image('hero', 'images/hero_stopped.png');
+    game.load.image('hero', 'images/lol.png');
     game.load.audio('sfx:jump', 'audio/jump.wav');
     game.load.audio('sfx:coin', 'audio/coin.wav');
     game.load.audio('sfx:stomp', 'audio/stomp.wav');
@@ -31,7 +31,7 @@ function preload(){
     game.load.image('key', 'images/key.png');
     game.load.audio('sfx:key', 'audio/key.wav');
     game.load.audio('sfx:door', 'audio/door.wav');
-    game.load.spritesheet('icon:key', 'images/key_icon.png', 34, 30);
+    game.load.spritesheet('icon:key', 'images/Potatoes.png', 34, 30);
 };
 
 function create(){
@@ -108,7 +108,7 @@ function spawnPlatform(platform) {
 function spawnCharacters (data) {
     // spawn hero
     hero = game.add.sprite(data.hero.x, data.hero.y, 'hero');
-    hero.anchor.set(0.5, 0.5);
+    hero.anchor.set(0.5, 1);
     //Make the main character use the physics engine for movement
     game.physics.enable(hero);
     hero.body.collideWorldBounds = true;
@@ -174,7 +174,7 @@ function jump(){
 
 function spawnCoin(coin) {
     var sprite = coins.create(coin.x, coin.y, 'coin');
-    sprite.anchor.set(0.5, 0.5);
+    sprite.anchor.set(0.5, 0);
     sprite.animations.add('rotate', [0, 1, 2, 1], 6, true); // 6fps, looped
     sprite.animations.play('rotate');
     game.physics.enable(sprite);
@@ -270,10 +270,16 @@ function onHeroVsDoor(hero, door){
     if (level ===0){
         level = level + 1;
     }
+else if(level === 1){
+    level = level + 1;
+}
+
     else {
         level = 0;
     }
     hasKey = false;
+    
+
     game.state.restart();
 }
 
